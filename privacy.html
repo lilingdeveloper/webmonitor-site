@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebMonitor 隐私政策 / Privacy Policy</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --border: #e2e8f0;
+      --code-bg: rgba(15, 23, 42, 0.06);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --card: #1e293b;
+        --text: #f1f5f9;
+        --muted: #94a3b8;
+        --accent: #60a5fa;
+        --border: #334155;
+        --code-bg: rgba(255, 255, 255, 0.08);
+      }
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 32px 16px 64px;
+      line-height: 1.75;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+    }
+    h1 { font-size: 1.55rem; margin-top: 0; margin-bottom: 0.4rem; }
+    h2 { font-size: 1.15rem; margin-top: 1.7rem; margin-bottom: 0.6rem; color: var(--text); }
+    p, li { font-size: 0.96rem; color: var(--text); }
+    ul { padding-left: 1.3rem; }
+    li { margin-bottom: 0.45rem; }
+    .date { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.4rem; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+    code {
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WebMonitor 隐私政策</h1>
+    <p class="date">最近更新：2026 年 10 月 22 日</p>
+
+    <p>WebMonitor（以下简称“本应用”）是一款在设备本地运行的网页局部内容监控与数据看板工具。本政策客观说明本应用如何处理数据与系统权限。</p>
+
+    <h2>一、我们不收集什么</h2>
+    <ul>
+      <li>无账号体系，不要求注册；</li>
+      <li>无广告、无第三方分析 SDK、无跨应用或跨网站追踪行为（<code>NSPrivacyTracking = false</code>）；</li>
+      <li>不读取你的通讯录、相册内容、位置、相机或麦克风，不请求或上传推送通知令牌（Push Token）；</li>
+      <li><strong>你的网站账号密码从不离开设备</strong>；</li>
+      <li><strong>不使用任何第三方云端 AI 服务</strong>：页面结构判断、自动登录与内容提取均在你的设备上按本地规则完成。</li>
+    </ul>
+
+    <h2>二、存储在设备本地的数据与权限</h2>
+    <p>以下数据仅存储在你的设备本地，不会发送给开发者或任何第三方：</p>
+    <ul>
+      <li><strong>网站账号密码</strong>：你在网页登录过程中选择保存的凭据，存储于 iOS 系统钥匙串（Keychain），仅本设备可读取；</li>
+      <li><strong>网页会话快照</strong>：为保持监控页面登录态而保存的 Cookie 与 <code>localStorage</code>，存储于系统钥匙串；</li>
+      <li><strong>监控配置</strong>：你添加的监控网址、追踪元素选择器、刷新间隔、历史记录及登录/取数步骤，存储于本应用本地沙盒内；</li>
+      <li><strong>相册写入权限（<code>NSPhotoLibraryAddUsageDescription</code>）</strong>：仅在你主动将网页中的登录二维码保存到系统相册时使用，本应用不具备读取相册的权限。</li>
+    </ul>
+
+    <h2>三、网络请求说明</h2>
+    <ul>
+      <li><strong>网页访问</strong>：本应用按你的设置直接从设备访问你添加的目标网址，并在看板卡片上更新提取的数据与状态提示，请求内容仅包含加载该网页本身所需的数据。</li>
+      <li><strong>规则更新检查</strong>：本应用每天向开发者的服务器查询一次页面识别规则包是否有更新（你也可在设置中手动检查）。请求仅包含当前规则版本号，<strong>不包含任何个人或监控数据</strong>；下载的规则包须通过数字签名校验后才会在本地启用。</li>
+      <li><strong>运行日志上传（可选，默认关闭）</strong>：仅当你在「设置 → 日志与诊断」中手动开启「上传日志与操作轨迹」后，本应用才会在自动登录或取数完成后上传脱敏运行日志，用于排查与改进页面识别规则。
+        <br>日志内容包括：页面网址与标题、页面可见文本片段与按钮/链接文案、每一步执行动作及结果。上传前会在本地对邮箱、手机号、长数字、网址查询参数等进行占位符替换；<strong>绝不包含</strong>你在输入框中填写的内容、密码、Cookie 与登录会话。
+        <br>日志仅附带应用随机生成的标识（服务端保存前做单向哈希处理），不与你的身份关联。已上传的日志会从设备本地移除；关闭开关后立即停止上传。数据仅用于改进页面识别规则，不出售、不与第三方共享。</li>
+      <li><strong>操作轨迹上传（可选，默认关闭）</strong>：仅当你在「设置 → 日志与诊断」中手动开启「上传日志与操作轨迹」后，本应用才会将难以仅靠本地判断能否省略的步骤元数据上传至开发者服务器，用于比对并生成步骤精简建议。精简建议仅在后续运行中试用，若执行失败会自动恢复原步骤。
+        <br>上传内容仅限：每一步的动作类型（如点击、选择）、元素类型（如页签、按钮）、按钮或页签上的简短文字（20 字以内，且已对已保存账号、邮箱、手机号及 3 位以上数字进行脱敏打码）、每一步前后页面的结构变化（是否换页、弹窗数量、视图标题、路径模板如 <code>/user/{id}/bill</code>）、网站注册域名（如 <code>example.com</code>）、监控数值形态（如“数字+GB”），以及建议在本地试用的成败结果。
+        <br><strong>绝不上传</strong>：账号密码等凭据、输入框中填写的任何内容、提取到的具体数值、页面正文、完整网址与查询参数、Cookie 与登录会话。上传前本应用会执行本地脱敏复检，若发现疑似未脱敏内容则整份丢弃；服务端也会二次校验。
+        <br>保存期限：原始轨迹保存 30 天；步骤建议及运行结果保存 180 天。
+        <br>你可随时在「设置 → 日志与诊断」中关闭「上传日志与操作轨迹」，或点击「删除已上传的数据」直接清除服务器上本设备上传过的全部轨迹与结果。</li>
+    </ul>
+
+    <h2>四、数据删除</h2>
+    <p>在看板中删除单张卡片即可移除该卡片的监控配置、已记录的登录/取数步骤及独立会话数据；卸载本应用即可清除设备本地的全部数据。已上传的操作轨迹可通过「设置 → 日志与诊断 → 删除已上传的数据」一键删除；如需删除已上传的运行日志，请通过下方邮箱联系我们。</p>
+
+    <h2>五、政策变更与联系方式</h2>
+    <p>本政策如有更新将在本页面公布。如对本政策有任何疑问，请联系：<a href="mailto:liling.developer@gmail.com">liling.developer@gmail.com</a></p>
+
+    <hr class="divider" />
+
+    <h1>WebMonitor Privacy Policy (English)</h1>
+    <p class="date">Last Updated: October 22, 2026</p>
+
+    <p>WebMonitor ("the App") is an on-device webpage element monitoring and data board utility. This policy explains objectively how the App handles data and system permissions.</p>
+
+    <h2>1. What We Do Not Collect</h2>
+    <ul>
+      <li><strong>No Account Required</strong>: The App does not require user registration or personal profiles.</li>
+      <li><strong>No Ads or Third-Party Tracking</strong>: The App contains no advertising SDKs, no third-party analytics frameworks, and does not track you across apps or websites (<code>NSPrivacyTracking = false</code>).</li>
+      <li><strong>No Access to Sensitive Device Data</strong>: The App does not read your contacts, photo library contents, location, camera, or microphone, and does not request or upload push notification tokens.</li>
+      <li><strong>Credentials Never Leave Your Device</strong>: Any website login credentials you save remain strictly on your device.</li>
+      <li><strong>No Third-Party Cloud AI</strong>: Page evaluation, automated login, and content extraction are executed locally on your device using rule-based scripts.</li>
+    </ul>
+
+    <h2>2. On-Device Data Storage &amp; Permissions</h2>
+    <p>The following data is stored locally on your device and is never transmitted to the developer or any third party:</p>
+    <ul>
+      <li><strong>Website Credentials</strong>: Login usernames and passwords you choose to save are stored in the iOS System Keychain, accessible only on your device.</li>
+      <li><strong>Web Session Snapshots</strong>: Cookies and <code>localStorage</code> items saved to maintain login sessions for monitored pages are stored in the iOS System Keychain.</li>
+      <li><strong>Monitoring Configurations</strong>: Target URLs, tracked element selectors, refresh intervals, check history, and recorded login/extraction steps are stored locally within the App sandbox.</li>
+      <li><strong>Photo Library Write-Only Permission (<code>NSPhotoLibraryAddUsageDescription</code>)</strong>: Used solely when you explicitly choose to save a login QR code from a webpage to your system Photos app. The App cannot read your photo library.</li>
+    </ul>
+
+    <h2>3. Network Requests</h2>
+    <ul>
+      <li><strong>Target Webpage Fetching</strong>: Your device connects directly to the webpage URLs you configure to check their contents and update card data and status prompts on the in-app board.</li>
+      <li><strong>Rule-Pack Update Checks</strong>: Once per day (or when manually triggered in Settings), the App queries the developer's server for updated page-recognition rule packs. This request transmits only the current rule version number and contains <strong>no user or monitoring data</strong>. Downloaded rule packs are verified via cryptographic signature before activation.</li>
+      <li><strong>Optional Run-Log Upload (Off by Default)</strong>: Only if you explicitly enable "Upload Run Logs" in <em>Settings → Logs &amp; Diagnostics</em> will the App upload redacted execution logs to help diagnose and improve page-recognition rules.
+        <br>Redacted logs include page URLs (with query parameters scrubbed), page titles, short visible text snippets, button/link labels, and step outcomes. Emails, phone numbers, long numeric strings, and URL query parameters are replaced with placeholders on-device before upload. Logs <strong>never include</strong> passwords, text input values, cookies, or session tokens. You can disable this toggle at any time.</li>
+      <li><strong>Optional Operation-Trace Upload (Off by Default)</strong>: Only if you explicitly enable "Upload Operation Traces to Improve Rules" in <em>Settings → Logs &amp; Diagnostics</em> will the App upload anonymized step metadata to the developer's server to identify skippable steps. Suggested simplifications are tested locally on subsequent runs and automatically reverted if an error occurs.
+        <br>Uploaded metadata is strictly limited to: action type (e.g., click, select), element type (e.g., tab, button), short button/tab labels (up to 20 characters, with saved usernames, emails, phone numbers, and numbers of 3+ digits masked on-device), structural page changes (page navigation flag, modal count, view title, URL path template such as <code>/user/{id}/bill</code>), registered domain (e.g., <code>example.com</code>), target value format (e.g., "number+GB"), and whether a suggested step simplification succeeded or failed.
+        <br>It <strong>never includes</strong> credentials, user-typed input values, extracted monitoring values, body text, full URLs or query strings, cookies, or session tokens. Raw traces expire after 30 days, and step suggestions expire after 180 days.
+        <br>You can turn off trace uploads at any time in <em>Settings → Logs &amp; Diagnostics</em>, or tap <strong>"Delete Uploaded Data"</strong> in Settings to immediately delete all traces and results uploaded from your device.</li>
+    </ul>
+
+    <h2>4. Data Deletion</h2>
+    <p>Deleting a card on the board removes its monitoring configuration, recorded login/extraction steps, and isolated session data; uninstalling the App removes all local data from your device. Uploaded operation traces can be deleted directly via <em>Settings → Logs &amp; Diagnostics → Delete Uploaded Data</em>. To request deletion of uploaded run logs, please contact us via the email below.</p>
+
+    <h2>5. Changes &amp; Contact</h2>
+    <p>Any updates to this policy will be posted on this page. If you have questions about this Privacy Policy, please contact: <a href="mailto:liling.developer@gmail.com">liling.developer@gmail.com</a></p>
+  </div>
+</body>
+</html>

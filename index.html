@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebMonitor — 网页数据看板 (iOS)</title>
+  <meta name="description" content="WebMonitor 是一个在设备本地运行的网页局部内容看板工具。在手机一屏集中展示多个网页的指定区域或文字，纯本地规则回放，不依赖云端代挂，凭据存于本地钥匙串。" />
+  <style>
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-serif: "New York", "Songti SC", "Source Han Serif CN", Georgia, serif;
+      --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --surface-subtle: #f4f4f6;
+      --text-main: #111111;
+      --text-body: #2b2b2f;
+      --text-muted: #6e6e73;
+      --text-faint: #86868b;
+      --border: #e5e5ea;
+      --border-dark: #1d1d1f;
+      --accent: #000000;
+      --code-bg: #f0f0f2;
+      --tag-bg: #ececf0;
+      
+      --container-max: 820px;
+      --line-height-body: 1.8;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d0d0f;
+        --surface: #141416;
+        --surface-subtle: #1c1c1f;
+        --text-main: #ffffff;
+        --text-body: #d1d1d6;
+        --text-muted: #98989d;
+        --text-faint: #636366;
+        --border: #2c2c2e;
+        --border-dark: #f5f5f7;
+        --accent: #ffffff;
+        --code-bg: #242428;
+        --tag-bg: #222226;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-body);
+      font-family: var(--font-sans);
+      line-height: var(--line-height-body);
+      padding: 0;
+      margin: 0;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* 顶部细边线与布局 */
+    .top-rule {
+      height: 3px;
+      background: var(--text-main);
+      width: 100%;
+    }
+
+    .wrapper {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 48px 24px 120px;
+    }
+
+    /* 顶部导航与品牌区 */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    .brand-version {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      background: var(--tag-bg);
+      color: var(--text-muted);
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+      font-size: 0.9rem;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    nav a:hover {
+      color: var(--text-main);
+    }
+
+    /* 文章式排版主标题区 (Hero Section) */
+    .hero {
+      margin-bottom: 64px;
+    }
+
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-label::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--text-main);
+      border-radius: 50%;
+    }
+
+    h1.hero-title {
+      font-family: var(--font-sans);
+      font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      color: var(--text-main);
+      margin-bottom: 24px;
+    }
+
+    p.hero-lead {
+      font-size: 1.18rem;
+      line-height: 1.7;
+      color: var(--text-body);
+      max-width: 680px;
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 32px;
+      padding: 18px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .meta-item .label {
+      font-size: 0.75rem;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .meta-item .value {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* 章节通用样式 */
+    section {
+      margin-top: 64px;
+      padding-top: 36px;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      margin-bottom: 24px;
+      align-items: baseline;
+    }
+
+    .section-index {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-faint);
+    }
+
+    h2.section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+    }
+
+    .prose {
+      font-size: 1.02rem;
+      line-height: var(--line-height-body);
+    }
+
+    .prose p {
+      margin-bottom: 20px;
+    }
+
+    .prose p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 强调引用框 (Blockquote) */
+    blockquote.manifesto {
+      margin: 32px 0;
+      padding: 24px 28px;
+      border-left: 3px solid var(--text-main);
+      background: var(--surface);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text-main);
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* 网格与特性清单 (Features List) */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px;
+      border-radius: 8px;
+    }
+
+    .feature-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .feature-num {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-faint);
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--text-body);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .feature-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .feature-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--tag-bg);
+      color: var(--text-muted);
+    }
+
+    /* 对比表格 (Table) */
+    .table-container {
+      margin: 28px 0;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-faint);
+      background: var(--surface-subtle);
+      font-weight: 500;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    td.dimension {
+      font-weight: 600;
+      color: var(--text-main);
+      width: 22%;
+    }
+
+    /* 边界清单 (Boundaries / Principles) */
+    .boundary-list {
+      list-style: none;
+      margin-top: 20px;
+    }
+
+    .boundary-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: baseline;
+    }
+
+    .boundary-item:last-child {
+      border-bottom: none;
+    }
+
+    .boundary-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .boundary-tag.do {
+      background: rgba(34, 197, 94, 0.12);
+      color: #15803d;
+    }
+
+    .boundary-tag.dont {
+      background: rgba(239, 68, 68, 0.12);
+      color: #b91c1c;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .boundary-tag.do {
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+      }
+      .boundary-tag.dont {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+      }
+    }
+
+    .boundary-desc {
+      font-size: 0.96rem;
+      color: var(--text-body);
+      line-height: 1.65;
+    }
+
+    .boundary-desc strong {
+      color: var(--text-main);
+    }
+
+    /* 底部操作与导航 */
+    footer {
+      margin-top: 96px;
+      padding-top: 36px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      font-size: 0.92rem;
+    }
+
+    .footer-links a {
+      color: var(--text-main);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-color: var(--border-dark);
+      transition: opacity 0.15s ease;
+    }
+
+    .footer-links a:hover {
+      opacity: 0.7;
+    }
+
+    .footer-note {
+      font-size: 0.82rem;
+      color: var(--text-faint);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .wrapper {
+        padding: 32px 18px 80px;
+      }
+      .section-header {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .hero-title {
+        font-size: 2.1rem;
+      }
+      .meta-bar {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-rule"></div>
+
+  <div class="wrapper">
+    <!-- 顶部极简导航 -->
+    <header>
+      <div class="brand">
+        <a href="/" class="brand-name">WebMonitor</a>
+        <span class="brand-version">v1.0 iOS</span>
+      </div>
+      <nav>
+        <a href="#rationale">设计初衷</a>
+        <a href="#features">工作机制</a>
+        <a href="#boundaries">能力边界</a>
+        <a href="#privacy">隐私安全</a>
+        <a href="/support.html">技术支持</a>
+        <a href="/privacy.html">隐私政策</a>
+      </nav>
+    </header>
+
+    <!-- 主视觉区 / 标题与导语 -->
+    <main>
+      <article>
+        <div class="hero">
+          <div class="hero-label">Local-First Web Board</div>
+          <h1 class="hero-title">在手机本地，把多个网页的指定数据集中在一屏。</h1>
+          <p class="hero-lead">
+            WebMonitor 是一个在 iOS 设备本地运行的网页局部内容看板工具。
+            无需服务器代挂，不依赖云端爬虫，纯本地规则回放登录与取数，网页凭据安全存储于系统钥匙串。
+          </p>
+
+          <div class="meta-bar">
+            <div class="meta-item">
+              <span class="label">操作系统</span>
+              <span class="value">iOS 17.0+</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">架构模式</span>
+              <span class="value">纯本地规则引擎 (Local Rules)</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">凭据存储</span>
+              <span class="value">iOS Keychain (系统钥匙串)</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">第三方追踪</span>
+              <span class="value">零采集 (NSPrivacyTracking = false)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 01 设计初衷 -->
+        <section id="rationale">
+          <div class="section-header">
+            <span class="section-index">01</span>
+            <h2 class="section-title">解决什么问题</h2>
+          </div>
+          <div class="prose">
+            <p>
+              平时为了查看不同网站的话费余额、宽带套餐余量、云主机账单、第三方 API 配额或监控指标，我们常常需要反复打开手机浏览器、切换多个标签页、逐一输入密码并翻找对应页面。
+            </p>
+            <p>
+              传统方案要么依赖复杂的第三方云端爬虫（存在泄露 Cookie 和账号密码的风险），要么只能依赖网站主动提供接口或 App。
+              WebMonitor 提供了一种轻量且属于你自己的解决方式：<strong>在卡片内嵌网页中直接框选你需要关注的那一小块区域或数值，让多个站点的目标数据在同一张看板上集中刷新。</strong>
+            </p>
+            
+            <blockquote class="manifesto">
+              “客观、冷静、真实。我们不使用夸张的宣传词汇，不架设代挂机服务器，如实说明软件在设备本地的工作方式、适用范围与明确的能力边界。”
+            </blockquote>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>对比维度</th>
+                    <th>传统云端爬虫 / 聚合服务</th>
+                    <th>WebMonitor (本地看板)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="dimension">运行环境</td>
+                    <td>远程第三方服务器</td>
+                    <td><strong>你手中的 iPhone 本地 (WKWebView)</strong></td>
+                  </tr>
+                  <tr>
+                    <td class="dimension">账号与 Cookie</td>
+                    <td>必须上传给托管方托管</td>
+                    <td><strong>存储于本机 Keychain，绝不离机</strong></td>
+                  </tr>
+                  <tr>
+                    <td class="dimension">遭遇验证码</td>
+                    <td>通常失效或尝试暴力破解</td>
+                    <td><strong>自动暂停，卡片内嵌手动过人机校验</strong></td>
+                  </tr>
+                  <tr>
+                    <td class="dimension">账号依赖</td>
+                    <td>需要注册服务账号、按月付费</td>
+                    <td><strong>无账号体系，打开即用，纯本地运行</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 02 核心工作机制 -->
+        <section id="features">
+          <div class="section-header">
+            <span class="section-index">02</span>
+            <h2 class="section-title">核心工作机制</h2>
+          </div>
+          <div class="prose">
+            <p>
+              WebMonitor 内部封装了强鲁棒性的通用页面解析与本地回放流水线，涵盖从点选、录制到定时静默抓取的全链路。
+            </p>
+
+            <div class="feature-grid">
+              <!-- 特性 1 -->
+              <div class="feature-card">
+                <div class="feature-card-header">
+                  <h3>01. 网页局部点选与双模式展示</h3>
+                  <span class="feature-num">Precision Clipping</span>
+                </div>
+                <p>
+                  在卡片内展开网页后，点击工具栏上的十字准星即可点选页面中的任意文本、数字或容器区块。
+                  支持<strong>「网页样式」</strong>（保留原网页局部视觉排版与 CSS 样式）与<strong>「纯文字」</strong>（仅提取文字片段并可自定义排序拼接）两种展示形态。
+                </p>
+                <div class="feature-tags">
+                  <span class="feature-tag">Shadow DOM 穿透</span>
+                  <span class="feature-tag">动态哈希类名过滤</span>
+                  <span class="feature-tag">多级定位器</span>
+                </div>
+              </div>
+
+              <!-- 特性 2 -->
+              <div class="feature-card">
+                <div class="feature-card-header">
+                  <h3>02. 按步骤回放自动登录与取数</h3>
+                  <span class="feature-num">Step Sequencer</span>
+                </div>
+                <p>
+                  针对需要登录或多步点击才能呈现数据的站点，你在卡片内手动操作的过程可被记录为步骤序列；亦可在卡片详情中直观编排动作：打开网址、聚焦输入框、填入已存账号密码、勾选协议、点击确认或延时等待。
+                  每次刷新时按顺序在本地 WebView 中重放，直达目标页面。
+                </p>
+                <div class="feature-tags">
+                  <span class="feature-tag">本地规则引擎</span>
+                  <span class="feature-tag">iOS 密码自动填充兼容</span>
+                  <span class="feature-tag">弹窗主动穿透</span>
+                </div>
+              </div>
+
+              <!-- 特性 3 -->
+              <div class="feature-card">
+                <div class="feature-card-header">
+                  <h3>03. 独立登录态与凭据管理</h3>
+                  <span class="feature-num">Session Isolation</span>
+                </div>
+                <p>
+                  默认情况下，同一网站的卡片共享登录会话。如需在同一个站点同时监控多个不同的账号（例如两个云服务账号或不同手机号），可为单个卡片开启<strong>「独立登录态」</strong>。每个卡片拥有互相隔离的 Cookie 与存储上下文。
+                </p>
+                <div class="feature-tags">
+                  <span class="feature-tag">WKWebsiteDataStore 隔离</span>
+                  <span class="feature-tag">Keychain 凭据加密</span>
+                </div>
+              </div>
+
+              <!-- 特性 4 -->
+              <div class="feature-card">
+                <div class="feature-card-header">
+                  <h3>04. 异常自动暂停与手动接管</h3>
+                  <span class="feature-num">Graceful Takeover</span>
+                </div>
+                <p>
+                  当目标网站出现图形验证码、Cloudflare Turnstile 验证、短信验证码或重大会话过期时，程序会自动暂停自动步骤，并在看板与卡片底部发出明确状态提示。
+                  只需点击展开卡片网页手动完成验证，完成后卡片将在同一会话上继续执行取数。
+                </p>
+                <div class="feature-tags">
+                  <span class="feature-tag">反死循环机制</span>
+                  <span class="feature-tag">原地接回原步骤</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 能力边界与声明 -->
+        <section id="boundaries">
+          <div class="section-header">
+            <span class="section-index">03</span>
+            <h2 class="section-title">适用范围与明确边界</h2>
+          </div>
+          <div class="prose">
+            <p>
+              为了避免不切实际的预期，我们如实公开 WebMonitor 的能力边界与运行约束：
+            </p>
+
+            <ul class="boundary-list">
+              <li class="boundary-item">
+                <span class="boundary-tag do">适用</span>
+                <div class="boundary-desc">
+                  <strong>结构相对稳定的管理后台与状态页</strong>：如云服务账单、宽带/流量套餐、余额看板、后台统计指标及常规账号密码登录的站点。
+                </div>
+              </li>
+              <li class="boundary-item">
+                <span class="boundary-tag dont">不具备</span>
+                <div class="boundary-desc">
+                  <strong>不破解、不绕过验证码</strong>：应用不会暴力破解任何图形验证码或滑块校验。遇到此类安全挑战时，必须由你在卡片内手动点击完成。
+                </div>
+              </li>
+              <li class="boundary-item">
+                <span class="boundary-tag dont">不具备</span>
+                <div class="boundary-desc">
+                  <strong>无云端挂机服务器</strong>：所有刷新完全受 iOS 系统后台调度机制（Background Fetch）及当前网络连接限制，无法像 24 小时云主机那样实现秒级高频爬取。
+                </div>
+              </li>
+              <li class="boundary-item">
+                <span class="boundary-tag dont">限制</span>
+                <div class="boundary-desc">
+                  <strong>网站重构时的维护成本</strong>：若目标网站前端代码全面重构、原有 DOM 节点与文字彻底改变，需要在卡片详情中重新点选一次目标区域或调整步骤。
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 04 隐私与安全 -->
+        <section id="privacy">
+          <div class="section-header">
+            <span class="section-index">04</span>
+            <h2 class="section-title">数据与隐私安全</h2>
+          </div>
+          <div class="prose">
+            <p>
+              WebMonitor 采用严格的本地优先（Local-First）安全原则：
+            </p>
+            <p>
+              • <strong>无账号体系</strong>：打开即可使用，无注册、无登录、不收集你的个人资料。<br />
+              • <strong>零广告与第三方追踪</strong>：项目中未集成任何第三方统计、广告或行为追踪 SDK（声明 <code>NSPrivacyTracking = false</code>）。<br />
+              • <strong>凭据不离机</strong>：你的网站账号、密码、Cookie 与网页快照存储在设备本地的 iOS Keychain 和沙盒内，绝不上传到任何服务器。<br />
+              • <strong>全本地规则判定</strong>：页面判定、元素定位自愈与步骤调度全部由设备本地代码驱动，运行时不调用任何在线 AI 模型接口。
+            </p>
+          </div>
+        </section>
+
+        <!-- 05 开发者与支持 -->
+        <section id="support">
+          <div class="section-header">
+            <span class="section-index">05</span>
+            <h2 class="section-title">开发者与技术支持</h2>
+          </div>
+          <div class="prose">
+            <p>
+              WebMonitor 由个人开发者独立维护。如果您在使用过程中遇到特定网站适配异常、录制卡顿或有功能建议，欢迎查阅相关技术文档或通过邮件与我联系。
+            </p>
+            <p>
+              • <strong>开发者邮箱</strong>：<a href="mailto:liling.developer@gmail.com" style="color:var(--text-main); font-family:var(--font-mono);">liling.developer@gmail.com</a><br />
+              • <strong>官方域名</strong>：<a href="https://webmonitor.com.cn" style="color:var(--text-main); font-family:var(--font-mono);">webmonitor.com.cn</a><br />
+              • <strong>开源与问题追踪</strong>：<a href="https://github.com/lilingdeveloper/Local-Web-Monitor" target="_blank" rel="noopener noreferrer" style="color:var(--text-main); font-family:var(--font-mono);">GitHub 仓库 (Local-Web-Monitor)</a>
+            </p>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <!-- 页脚链接 -->
+    <footer>
+      <div class="footer-links">
+        <a href="/support.html">技术支持与使用说明 (Support)</a>
+        <a href="/privacy.html">隐私政策 (Privacy Policy)</a>
+        <a href="https://github.com/lilingdeveloper/Local-Web-Monitor" target="_blank" rel="noopener noreferrer">GitHub 源码仓库</a>
+      </div>
+      <div class="footer-note">
+        © 2026 WebMonitor · 保留所有权利 · 运行于本地，归还数据自主权
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

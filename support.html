@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebMonitor 技术支持与使用说明 / Technical Support</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --border: #e2e8f0;
+      --code-bg: rgba(15, 23, 42, 0.06);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --card: #1e293b;
+        --text: #f1f5f9;
+        --muted: #94a3b8;
+        --accent: #60a5fa;
+        --border: #334155;
+        --code-bg: rgba(255, 255, 255, 0.08);
+      }
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 32px 16px 64px;
+      line-height: 1.75;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+    }
+    h1 { font-size: 1.55rem; margin-top: 0; margin-bottom: 0.4rem; }
+    h2 { font-size: 1.15rem; margin-top: 1.7rem; margin-bottom: 0.6rem; color: var(--text); }
+    p, li { font-size: 0.96rem; color: var(--text); }
+    ul, ol { padding-left: 1.3rem; }
+    li { margin-bottom: 0.45rem; }
+    .meta { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.4rem; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WebMonitor 技术支持与使用说明</h1>
+    <p class="meta">适用于 iOS / iPadOS 版本 WebMonitor</p>
+
+    <h2>一、功能简介</h2>
+    <p>WebMonitor 是一款在设备本地运行的网页局部内容监控与数据看板工具。你可以添加需要关注的网页，点选页面上的特定文本或区域，由应用按设定间隔在本地加载页面、提取当前内容，并在看板卡片上更新数据与状态提示。</p>
+
+    <h2>二、基本使用方法</h2>
+    <ol>
+      <li><strong>添加监控卡片</strong>：在看板页点击右上角添加按钮，在卡片内嵌网页中输入目标网址并加载页面，点击工具栏上的十字准星点选需要追踪的区域或文字后完成保存。</li>
+      <li><strong>配置登录与取数流程（可选）</strong>：若目标页面需要登录或切换页签，应用可将你在卡片内手动登录和导航的操作记录为步骤，并可将网页登录凭据保存在 iOS 系统钥匙串（Keychain）中；你也可以在「卡片详情」的「登录流程 / 取数流程」中查看、添加或调整每一步操作。</li>
+      <li><strong>刷新与人工接管</strong>：在看板页下拉或按设定间隔自动刷新时，应用会在本地按序执行步骤并更新卡片内容。当网页出现图形验证码、短信验证或页面结构变更需要人工处理时，卡片会暂停自动步骤并在看板与卡片底部显示状态提示，供你展开卡片内嵌网页手动完成验证。</li>
+    </ol>
+
+    <h2>三、常见问题（FAQ）</h2>
+    <ul>
+      <li><strong>为什么卡片提示需要手动操作？</strong><br>
+        当目标网站弹出验证码、二次验证或页面布局发生变化导致本地规则无法继续自动执行时，应用会暂停自动操作并保留当前页面状态，你可以展开卡片内嵌网页手动完成验证。</li>
+      <li><strong>保存的网站账号密码存储在哪里？</strong><br>
+        账号密码与网页会话 Cookie 仅加密存储在你设备的 iOS 系统钥匙串（Keychain）中，不会上传至开发者或任何第三方服务器。</li>
+      <li><strong>如何删除本地数据或已上传的诊断信息？</strong><br>
+        在看板中删除卡片即可移除该卡片的监控配置、登录/取数步骤与独立会话数据；在「设置 → 日志与诊断」中可随时关闭诊断上传开关（默认均为关闭），或点击「删除已上传的数据」清除服务端记录；卸载应用将移除设备本地的全部数据。</li>
+    </ul>
+
+    <h2>四、联系我们与隐私政策</h2>
+    <ul>
+      <li>技术支持邮箱：<a href="mailto:liling.developer@gmail.com">liling.developer@gmail.com</a></li>
+      <li>隐私政策：<a href="https://lilingdeveloper.github.io/privacy.html">查看 WebMonitor 隐私政策</a></li>
+    </ul>
+
+    <hr class="divider" />
+
+    <h1>WebMonitor Technical Support</h1>
+    <p class="meta">For WebMonitor on iOS &amp; iPadOS</p>
+
+    <h2>1. Overview</h2>
+    <p>WebMonitor is an on-device utility for viewing and refreshing specific regions or text from multiple webpages on a single board. It loads user-configured webpages directly on your device, extracts the selected page elements, and updates card data and status prompts on the in-app board.</p>
+
+    <h2>2. Basic Usage</h2>
+    <ol>
+      <li><strong>Add a Monitoring Card</strong>: Tap the add button on the board, enter the target webpage URL inside the card's embedded WebView, tap the crosshair icon in the toolbar to select the block or text you want to track, and tap Done.</li>
+      <li><strong>Configure Login &amp; Extraction Flows (Optional)</strong>: For pages that require sign-in or navigation, the App can record your manual login and navigation steps, save website credentials in the iOS System Keychain, and let you inspect, add, or edit steps under <em>Login Flow</em> and <em>Extraction Flow</em> in Card Detail.</li>
+      <li><strong>Refresh &amp; Manual Verification</strong>: During manual or scheduled refreshes, the App replays your configured steps locally and updates the card on the board. If a website presents a CAPTCHA, two-factor prompt, or layout change that requires manual input, automatic execution pauses and displays a status prompt on the card so you can expand the embedded webpage view and complete verification directly.</li>
+    </ol>
+
+    <h2>3. Frequently Asked Questions</h2>
+    <ul>
+      <li><strong>Why does a card ask for manual interaction?</strong><br>
+        When a target webpage displays a CAPTCHA, verification code prompt, or significant layout change, automatic execution pauses so you can complete the interaction directly inside the card's embedded webpage view.</li>
+      <li><strong>Where are my saved website passwords stored?</strong><br>
+        Saved website credentials and session cookies are stored exclusively in the iOS System Keychain on your device and are never transmitted to any developer or third-party server.</li>
+      <li><strong>How do I delete my data?</strong><br>
+        Deleting a card on the board removes its monitoring configuration, recorded login/extraction steps, and isolated session data. In <em>Settings → Logs &amp; Diagnostics</em>, both diagnostic upload toggles default to off, and you can tap <strong>"Delete Uploaded Data"</strong> at any time to clear server-side trace records. Uninstalling the App removes all local data from your device.</li>
+    </ul>
+
+    <h2>4. Contact &amp; Privacy Policy</h2>
+    <ul>
+      <li>Support Email: <a href="mailto:liling.developer@gmail.com">liling.developer@gmail.com</a></li>
+      <li>Privacy Policy: <a href="https://lilingdeveloper.github.io/privacy.html">View WebMonitor Privacy Policy</a></li>
+    </ul>
+  </div>
+</body>
+</html>
